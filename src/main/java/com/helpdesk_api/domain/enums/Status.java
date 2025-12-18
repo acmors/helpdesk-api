@@ -1,11 +1,12 @@
 package com.helpdesk_api.domain.enums;
 
 public enum Status {
-    PENDENTE("PENDENTE"),
-    EM_ANDAMENTO("EM ANDAMENTO"),
-    RESOLVIDO("RESOLVIDO"),
-    CANCELADO("CANCELADO"),
-    ENCERRADO("ENCERRADO");
+    OPEN("OPEN"),
+    PENDING("PENDING"),
+    IN_PROGRESS("IN PROGRESS"),
+    RESOLVED("RESOLVED"),
+    CANCELED("CANCELED"),
+    CLOSED("CLOSED");
 
     private final String status;
 
