@@ -7,9 +7,10 @@ import com.helpdesk_api.domain.enums.Status;
 import com.helpdesk_api.repository.CommentRepository;
 import com.helpdesk_api.repository.TicketRepository;
 import com.helpdesk_api.repository.UserRepository;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.time.Instant;
 import java.util.List;
 
@@ -20,6 +21,7 @@ public class CommentService {
     private final CommentRepository repository;
     private final TicketRepository ticketRepository;
     private final UserRepository userRepository;
+
 
     @Transactional
     public Comment create(Long ticketId, Long userId, Comment comment){
@@ -36,11 +38,13 @@ public class CommentService {
         return repository.save(comment);
     }
 
+    @Transactional(readOnly = true)
     public Comment findById(Long id){
         return repository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Comment not found."));
     }
 
+    @Transactional(readOnly = true)
     public List<Comment> findAllComments(){
         return repository.findAll();
     }
