@@ -1,4 +1,4 @@
-package com.helpdesk_api.controller;
+package com.helpdesk_api.web.controller;
 
 import com.helpdesk_api.domain.Ticket;
 import com.helpdesk_api.service.TicketService;

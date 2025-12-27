@@ -1,4 +1,4 @@
-package com.helpdesk_api.controller;
+package com.helpdesk_api.web.controller;
 
 import com.helpdesk_api.domain.Comment;
 import com.helpdesk_api.service.CommentService;

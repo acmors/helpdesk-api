@@ -2,7 +2,7 @@ package com.helpdesk_api.service;
 
 import com.helpdesk_api.domain.Comment;
 import com.helpdesk_api.domain.Ticket;
-import com.helpdesk_api.domain.User;
+import com.helpdesk_api.domain.UserAccount;
 import com.helpdesk_api.repository.CommentRepository;
 import com.helpdesk_api.repository.TicketRepository;
 import com.helpdesk_api.repository.UserRepository;
@@ -27,10 +27,10 @@ public class CommentService {
     @Transactional
     public Comment create(Long ticketId, Long userId, Comment comment){
         Ticket ticket = ticketRepository.findById(ticketId).orElseThrow(() -> new RuntimeException("Ticket not found."));
-        User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found."));
+        UserAccount userAccount = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found."));
 
         comment.setTicket(ticket);
-        comment.setUser(user);
+        comment.setUser(userAccount);
         comment.setCreatedAt(Instant.now());
 
         return repository.save(comment);

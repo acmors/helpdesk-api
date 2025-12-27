@@ -1,6 +1,6 @@
-package com.helpdesk_api.controller;
+package com.helpdesk_api.web.controller;
 
-import com.helpdesk_api.domain.User;
+import com.helpdesk_api.domain.UserAccount;
 import com.helpdesk_api.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -18,8 +18,8 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping
-    public ResponseEntity<User> create(@RequestBody User user){
-        var createUser = userService.create(user);
+    public ResponseEntity<UserAccount> create(@RequestBody UserAccount userAccount){
+        var createUser = userService.create(userAccount);
         return ResponseEntity.status(HttpStatus.CREATED).body(createUser);
     }
 }

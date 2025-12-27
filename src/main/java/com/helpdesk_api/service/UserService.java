@@ -1,6 +1,6 @@
 package com.helpdesk_api.service;
 
-import com.helpdesk_api.domain.User;
+import com.helpdesk_api.domain.UserAccount;
 import com.helpdesk_api.domain.enums.Role;
 import com.helpdesk_api.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -12,9 +12,9 @@ public class UserService {
 
     private final UserRepository userRepository;
 
-    public User create(User user){
-        user.setRole(Role.USER);
+    public UserAccount create(UserAccount userAccount){
+        userAccount.setRole(Role.USER);
 
-        return userRepository.save(user);
+        return userRepository.save(userAccount);
     }
 }
