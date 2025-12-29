@@ -1,6 +1,7 @@
 package com.helpdesk_api.web.controller;
 
 import com.helpdesk_api.domain.Ticket;
+import com.helpdesk_api.domain.enums.Status;
 import com.helpdesk_api.service.TicketService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
@@ -33,5 +34,23 @@ public class TicketController {
     @GetMapping("/{id}")
     public ResponseEntity<Ticket> findById(@PathVariable Long id){
         return ResponseEntity.ok(service.findById(id));
+    }
+
+    @PatchMapping("/{id}/status")
+    public ResponseEntity<Void> changeTicketStatus(@PathVariable("id") Long id, @RequestBody Status status){
+       service.changeTicketStatus(id, status);
+       return ResponseEntity.noContent().build();
+    }
+
+    @PatchMapping("/ticket/{ticketId}/group/{groupId}")
+    public ResponseEntity<Void> changeTicketGroup(@PathVariable("ticketId") Long ticketId, @PathVariable("groupId") Long groupId){
+        service.assignTicketToGroup(ticketId, groupId);
+        return ResponseEntity.noContent().build();
+    }
+
+    @PatchMapping("/ticket/{ticketId}/analyst/{analystId}")
+    public ResponseEntity<Void> changeTicketAnalyst(@PathVariable("ticketId") Long ticketId, @PathVariable("analystId") Long analystId){
+        service.assignTicketToAnalyst(ticketId, analystId);
+        return ResponseEntity.noContent().build();
     }
 }

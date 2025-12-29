@@ -1,6 +1,5 @@
 package com.helpdesk_api.domain;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.helpdesk_api.domain.enums.Role;
 import jakarta.persistence.*;
@@ -38,7 +37,7 @@ public class UserAccount {
     @OneToMany(mappedBy = "userAccount", fetch = FetchType.LAZY)
     private Set<Comment> comments;
 
-    @ManyToMany(mappedBy = "users")
+    @ManyToMany(mappedBy = "usersId")
     private Set<Group> groups;
 
 

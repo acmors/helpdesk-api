@@ -42,6 +42,10 @@ public class Ticket {
     @OneToMany(mappedBy = "ticket", fetch = FetchType.LAZY)
     private Set<Comment> comments;
 
+    @ManyToOne
+    @JoinColumn(name = "group_id")
+    private Group group;
+
 
 
 
