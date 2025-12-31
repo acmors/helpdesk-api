@@ -22,6 +22,12 @@ public class UserService {
     }
 
     @Transactional(readOnly = true)
+    public UserAccount findByUserResponseId(Long id){
+        return userRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("User not Found."));
+    }
+
+    @Transactional(readOnly = true)
     public UserAccount findById(Long id){
         return userRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("User not Found."));

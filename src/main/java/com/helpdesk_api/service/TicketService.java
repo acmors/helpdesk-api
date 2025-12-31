@@ -9,10 +9,8 @@ import com.helpdesk_api.repository.TicketRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.time.Instant;
 import java.util.List;
-import java.util.Set;
 
 @RequiredArgsConstructor
 @Service
@@ -21,7 +19,6 @@ public class TicketService {
     private final TicketRepository repository;
     private final GroupService groupService;
     private final UserService userService;
-
 
     @Transactional
     public Ticket create(Ticket newTicket){
