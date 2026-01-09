@@ -1,56 +1,57 @@
 package com.helpdesk_api.web.controller;
 
 import com.helpdesk_api.domain.Ticket;
-import com.helpdesk_api.domain.enums.Status;
 import com.helpdesk_api.service.TicketService;
+import com.helpdesk_api.web.dto.ticket.ChangeTicketStatusDTO;
+import com.helpdesk_api.web.dto.ticket.TicketResponse;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/api/v1/tickets")
 public class TicketController {
 
     private final TicketService service;
 
-    public TicketController(TicketService service) {
-        this.service = service;
-    }
-
     @PostMapping()
-    public ResponseEntity create(@RequestBody Ticket ticket){
+    public ResponseEntity<TicketResponse> create(@RequestBody Ticket ticket){
         service.create(ticket);
-        return new ResponseEntity<>(HttpStatus.CREATED);
+        return ResponseEntity.status(HttpStatus.CREATED).build();
+
     }
 
     @GetMapping
-    public ResponseEntity<List<Ticket>> findAll(){
-        return ResponseEntity.ok(service.list());
+    public ResponseEntity<List<TicketResponse>> findAll(){
+        var list = service.list();
+        return ResponseEntity.status(HttpStatus.OK).body(list);
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<Ticket> findById(@PathVariable Long id){
-        return ResponseEntity.ok(service.findById(id));
+    @GetMapping("/{ticketNumber}")
+    public ResponseEntity<TicketResponse> findByTicketNumber(@PathVariable String ticketNumber){
+        var ticket = service.findByTicketNumber(ticketNumber);
+        return ResponseEntity.status(HttpStatus.OK).body(ticket);
     }
 
-    @PatchMapping("/{id}/status")
-    public ResponseEntity<Void> changeTicketStatus(@PathVariable("id") Long id, @RequestBody Status status){
-       service.changeTicketStatus(id, status);
+    @PatchMapping("/{ticketNumber}/status")
+    public ResponseEntity<Void> changeTicketStatus(@PathVariable String ticketNumber, @RequestBody ChangeTicketStatusDTO request){
+       service.changeTicketStatus(ticketNumber, request.getStatus());
        return ResponseEntity.noContent().build();
     }
 
-    @PatchMapping("/ticket/{ticketId}/group/{groupId}")
-    public ResponseEntity<Void> changeTicketGroup(@PathVariable("ticketId") Long ticketId, @PathVariable("groupId") Long groupId){
-        service.assignTicketToGroup(ticketId, groupId);
+    @PatchMapping("/ticket/{ticketNumber}/group/{groupId}")
+    public ResponseEntity<Void> changeTicketGroup(@PathVariable String ticketNumber, @PathVariable("groupId") Long groupId){
+        service.assignTicketToGroup(ticketNumber, groupId);
         return ResponseEntity.noContent().build();
     }
 
-    @PatchMapping("/ticket/{ticketId}/analyst/{analystId}")
-    public ResponseEntity<Void> changeTicketAnalyst(@PathVariable("ticketId") Long ticketId, @PathVariable("analystId") Long analystId){
-        service.assignTicketToAnalyst(ticketId, analystId);
+    @PatchMapping("/ticket/{ticketNumber}/analyst/{analystId}")
+    public ResponseEntity<Void> changeTicketAnalyst(@PathVariable String ticketNumber, @PathVariable Long analystId){
+        service.assignTicketToAnalyst(ticketNumber, analystId);
         return ResponseEntity.noContent().build();
     }
 }

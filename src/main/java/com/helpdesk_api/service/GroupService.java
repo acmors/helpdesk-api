@@ -1,7 +1,10 @@
 package com.helpdesk_api.service;
 
 import com.helpdesk_api.domain.Group;
+import com.helpdesk_api.exception.ResourceNotFoundException;
 import com.helpdesk_api.repository.GroupRepository;
+import com.helpdesk_api.web.dto.group.GroupResponse;
+import com.helpdesk_api.web.dto.group.GroupToDTOMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,19 +18,23 @@ public class GroupService {
     private final GroupRepository repository;
 
     @Transactional
-    public Group create(Group group){
-        return repository.save(group);
+    public GroupResponse create(Group group){
+        Group createGroup = repository.save(group);
+        return GroupToDTOMapper.toResponse(createGroup);
     }
 
     @Transactional(readOnly = true)
     public Group findById(Long id){
         return repository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Group not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Group not found"));
     }
 
     @Transactional(readOnly = true)
-    public List<Group> findAll(){
-        return repository.findAll();
+    public List<GroupResponse> findAll(){
+        return repository.findAll()
+                .stream()
+                .map(GroupToDTOMapper::toResponse)
+                .toList();
     }
 
     @Transactional

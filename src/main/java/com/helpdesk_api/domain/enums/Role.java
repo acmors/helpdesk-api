@@ -2,6 +2,7 @@ package com.helpdesk_api.domain.enums;
 
 public enum Role {
     ADMIN("ADMIN"),
+    ANALYST("ANALYST"),
     USER("USER");
 
     private final String role;
