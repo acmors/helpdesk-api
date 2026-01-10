@@ -5,10 +5,13 @@ import com.helpdesk_api.domain.UserAccount;
 import com.helpdesk_api.domain.enums.Role;
 import com.helpdesk_api.exception.ResourceAlreadyExistsException;
 import com.helpdesk_api.exception.ResourceNotFoundException;
+import com.helpdesk_api.exception.UsernameUniqueViolationException;
 import com.helpdesk_api.repository.UserRepository;
 import com.helpdesk_api.web.dto.user.UserResponse;
 import com.helpdesk_api.web.dto.user.UserToDTOMapper;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,16 +23,19 @@ import java.util.Objects;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @Transactional
     public UserResponse create(UserAccount userAccount){
-        if (userRepository.existsByEmail(userAccount.getEmail())){
-            throw new ResourceAlreadyExistsException("Already exists a user with this Email.");
-        }
 
-        userAccount.setRole(Role.USER);
-        UserAccount create = userRepository.save(userAccount);
-        return UserToDTOMapper.toResponse(create);
+        try{
+            userAccount.setPassword(passwordEncoder.encode(userAccount.getPassword()));
+            userAccount.setRole(Role.USER);
+            UserAccount create = userRepository.save(userAccount);
+            return UserToDTOMapper.toResponse(create);
+        }catch (DataIntegrityViolationException ex){
+            throw new UsernameUniqueViolationException(String.format("Usernmae {%s} already exists.", userAccount.getEmail()));
+        }
     }
 
     @Transactional(readOnly = true)
@@ -50,5 +56,19 @@ public class UserService {
     public void delete(Long id){
         var user = findById(id);
         userRepository.delete(user);
+    }
+
+    @Transactional(readOnly = true)
+    public UserAccount findEntityByUsername(String username){
+        return userRepository.findByEmail(username)
+                .orElseThrow(() -> new ResourceNotFoundException("Username not found."));
+    }
+
+    @Transactional(readOnly = true)
+    public UserResponse findByUsername(String username) {
+        var findUsername = userRepository.findByEmail(username)
+                .orElseThrow(() -> new ResourceNotFoundException("Username not found."));
+
+        return UserToDTOMapper.toResponse(findUsername);
     }
 }
